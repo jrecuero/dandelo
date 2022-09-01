@@ -9,7 +9,7 @@ class IHandler:
 
     def __init__(self):
         """___init__ method initializes a GameHandler instance.
-        
+
         - objects list contains all game object.
 
         - keyboard_control_object attribute stores the game object that should
@@ -32,49 +32,49 @@ class IHandler:
         self.keyboard_release_callback = None
         self.actions = {}
 
-    def add_object(self, the_object):
+    def add_object(self, a_object):
         """add_object method adds the given object to be handle.
         """
-        if the_object in self.objects:
+        if a_object in self.objects:
             return False
-        self.objects.append(the_object)
+        self.objects.append(a_object)
         return True
 
-    def remove_object(self, the_object):
+    def remove_object(self, a_object):
         """remove_object method removes the given object to be handled.
         """
-        if the_object not in self.objects:
+        if a_object not in self.objects:
             return False
-        self.objects.remove(the_object)
+        self.objects.remove(a_object)
         return True
 
-    def handle_keyboard_event(self, the_event):
+    def handle_keyboard_event(self, a_event):
         """handle_keyboard_event method pass all keyboard events to the
         object that had control of the keyboard.
         """
-        self.keyboard_control_object.handle_keyboard_event(the_event, self.keyboard_release_callback)
+        self.keyboard_control_object.handle_keyboard_event(a_event, self.keyboard_release_callback)
 
-    def add_action(self, the_action, the_callback):
+    def add_action(self, a_action, a_callback):
         """add_action methods adds a function to be invoked for the given
         action.
         """
-        if the_action in self.actions:
+        if a_action in self.actions:
             return False
-        self.actions[the_action] = the_callback
+        self.actions[a_action] = a_callback
         return True
 
-    def remove_action(self, the_action):
+    def remove_action(self, a_action):
         """remove_action method removes a function for the given action.
         """
-        if the_action not in self.actions:
+        if a_action not in self.actions:
             return False
-        del self.actions[the_action]
+        del self.actions[a_action]
         return True
 
-    def run_action(self, the_action, **kwargs):
+    def run_action(self, a_action, **kwargs):
         """run_action method runs the given action.
         """
-        if the_action not in self.actions:
+        if a_action not in self.actions:
             return False
-        self.actions[the_action](**kwargs)
+        self.actions[a_action](**kwargs)
         return True

@@ -10,7 +10,7 @@ class IObject:
     object created in the game.
     """
 
-    def __init__(self, the_name=None, the_sprite=None):
+    def __init__(self, a_name=None, a_sprite=None):
         """__init__ method creates an IObject instance.
 
         - uuid attribute stores the object unique identifier.
@@ -21,5 +21,11 @@ class IObject:
         the game object.
         """
         self.uid = str(uuid.uuid1())
-        self.name = the_name if the_name else self.uuid
-        self.sprite = the_sprite
+        self.name = a_name if a_name else self.uid
+        self.sprite = a_sprite
+
+    def get_sprite(self):
+        """get_sprite method returns the sprite instance to be added to the
+        handler sprite group.
+        """
+        return self.sprite

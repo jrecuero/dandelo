@@ -17,7 +17,7 @@ def create_board_scene(game_handler):
     """
     game_board = board.Board(10, 10, config.CELL_WIDTH, config.CELL_LENGTH)
     game_board.create_default_board(8)
-    game_player = player.Player(0, 0, game_board.board_to_screen)
+    game_player = player.Player(a_position=pygame.Vector2(), a_board_to_screen=game_board.board_to_screen)
     game_player.out_of_bounds = game_board.out_of_bounds
     board_scene = scene.Scene()
     board_scene.add_object(game_board)

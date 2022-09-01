@@ -11,7 +11,7 @@ class PopUpMenu(pygame.sprite.Sprite):
     options.
     """
 
-    def __init__(self, the_position, the_options):
+    def __init__(self, a_position, a_options):
         """__init__ methods initializes a PopUpMenu instance with the given
         options (list).
 
@@ -42,8 +42,8 @@ class PopUpMenu(pygame.sprite.Sprite):
         surface rectangle used to display the popup menu is stored.
         """
         super().__init__()
-        self.position = the_position
-        self.options = the_options
+        self.position = a_position
+        self.options = a_options
         self.selected = 0
         self.font_size = 24
         self.font = pygame.font.SysFont("arial", self.font_size)
@@ -53,8 +53,8 @@ class PopUpMenu(pygame.sprite.Sprite):
         self.length = self.font_size + 2 * self.padding
         self.image = pygame.Surface((self.width, self.length * len(self.options)))
         self.draw()
-        self.rect = self.image.get_rect()        
-        self.rect.topleft = the_position
+        self.rect = self.image.get_rect()
+        self.rect.topleft = a_position
 
     def get_sprite(self):
         """get_sprite method returns the sprite instance to be added to the
@@ -82,19 +82,19 @@ class PopUpMenu(pygame.sprite.Sprite):
             self.image.blit(option_image, (self.padding, y + self.padding))
             y += self.length
 
-    def handle_keyboard_event(self, the_event, the_release_callback=None):
+    def handle_keyboard_event(self, a_event, a_release_callback=None):
         """handle_keyboard_event method moves the player with the given
         keyboard inputs.
         """
-        if the_event.key == K_UP:
+        if a_event.key == K_UP:
             if self.selected != 0:
                 self.selected -= 1
-        if the_event.key == K_DOWN:
+        if a_event.key == K_DOWN:
             if self.selected < len(self.options) - 1:
                 self.selected += 1
-        if the_event.key == K_RETURN and the_release_callback:
+        if a_event.key == K_RETURN and a_release_callback:
             print("option {} was selected".format(self.options[self.selected]))
-            the_release_callback("player")
+            a_release_callback("player")
         self.draw()
 
     def update(self):
@@ -104,4 +104,4 @@ class PopUpMenu(pygame.sprite.Sprite):
         #if self.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
         #    print("option {} was selected".format(self.options[self.selected]))
         pass
-    
+
