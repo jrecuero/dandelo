@@ -3,7 +3,7 @@ in a game board.
 """
 
 import pygame
-import iobject
+from . import iobject
 
 
 class BObject(iobject.IObject):

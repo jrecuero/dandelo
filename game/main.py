@@ -4,18 +4,20 @@
 import sys
 import pygame
 from pygame.locals import *
-import board
-import colors
-import config
-import player
-import handler
-import scene
-import menu
+from engine import icolors
+from engine import idefaults
+from engine import board
+from engine import handler
+from engine import scene
+from engine import menu
+from engine import idefaults
+from game import config
+from game import player
 
 def create_board_scene(game_handler):
     """create_board_scene function creates the game board scene.
     """
-    game_board = board.Board(10, 10, config.CELL_WIDTH, config.CELL_LENGTH)
+    game_board = board.Board(10, 10, idefaults.DEFAULT_WIDTH, idefaults.DEFAULT_LENGTH)
     game_board.create_default_board(8)
     game_player = player.Player(a_position=pygame.Vector2(), a_board_to_screen=game_board.board_to_screen)
     game_player.out_of_bounds = game_board.out_of_bounds
@@ -56,7 +58,7 @@ def main():
     create_board_scene(game_handler)
     create_menu_scene(game_handler)
     while running:
-        screen.fill(colors.WHITE)
+        screen.fill(icolors.WHITE)
         game_handler.draw(screen)
         pygame.display.update()
         for event in pygame.event.get():

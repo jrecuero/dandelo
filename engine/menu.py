@@ -3,7 +3,7 @@
 
 import pygame
 from pygame.locals import *
-import colors
+from . import icolors
 
 
 class PopUpMenu(pygame.sprite.Sprite):
@@ -65,19 +65,19 @@ class PopUpMenu(pygame.sprite.Sprite):
     def draw(self):
         """draw methods displays the menu in the surface.
         """
-        self.image.fill(colors.WHITE)
-        background_color = colors.WHITE
-        foreground_color = colors.BLUE
+        self.image.fill(icolors.WHITE)
+        background_color = icolors.WHITE
+        foreground_color = icolors.BLUE
         y = 0
         for index, option in enumerate(self.options):
             if index == self.selected:
-                background_color = colors.BLUE
-                foreground_color = colors.WHITE
+                background_color = icolors.BLUE
+                foreground_color = icolors.WHITE
             else:
-                background_color = colors.WHITE
-                foreground_color = colors.BLUE
+                background_color = icolors.WHITE
+                foreground_color = icolors.BLUE
             pygame.draw.rect(self.image, background_color, (0, y, self.width, self.length))
-            pygame.draw.rect(self.image, colors.BLACK, (0, y, self.width, self.length), 1)
+            pygame.draw.rect(self.image, icolors.BLACK, (0, y, self.width, self.length), 1)
             option_image = self.font.render(option, True, foreground_color)
             self.image.blit(option_image, (self.padding, y + self.padding))
             y += self.length

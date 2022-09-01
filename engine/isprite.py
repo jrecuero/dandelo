@@ -4,7 +4,7 @@ game that contains an sprite.
 
 import uuid
 import pygame
-import config
+from . import idefaults
 
 
 class ISprite(pygame.sprite.Sprite):
@@ -50,11 +50,11 @@ class ISprite(pygame.sprite.Sprite):
         super().__init__()
         self.position = kwargs.get("a_position", pygame.Vector2())
         self.previous_position = self.position
-        self.width = kwargs.get("a_width", config.DEFAULT_SPRITE_WIDTH)
-        self.length = kwargs.get("a_length", config.DEFAULT_SPRITE_LENGTH)
-        self.border = kwargs.get("a_border", config.DEFAULT_SPRITE_BORDER)
-        self.foreground_color = kwargs.get("a_foreground_color", config.DEFAULT_SPRITE_COLOR)
-        self.background_color = kwargs.get("a_background_color", config.DEFAULT_SPRITE_COLOR)
+        self.width = kwargs.get("a_width", idefaults.DEFAULT_WIDTH)
+        self.length = kwargs.get("a_length", idefaults.DEFAULT_LENGTH)
+        self.border = kwargs.get("a_border", idefaults.DEFAULT_SPRITE_BORDER)
+        self.foreground_color = kwargs.get("a_foreground_color", idefaults.DEFAULT_SPRITE_COLOR)
+        self.background_color = kwargs.get("a_background_color", idefaults.DEFAULT_SPRITE_COLOR)
         self.key_color = kwargs.get("a_key_color", None)
         self.out_of_bounds = kwargs.get("a_out_of_bounds", None)
         self.image = pygame.Surface((self.width, self.length))

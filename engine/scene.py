@@ -1,7 +1,7 @@
 """scene.py module handles any scene added to the game.
 """
 
-import ihandler
+from . import ihandler
 
 
 class Scene(ihandler.IHandler):

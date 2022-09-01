@@ -1,12 +1,12 @@
 """player.py module implements all classes related with the game player.
 """
 
-import colors
-import config
+from engine import icolors
 import pygame
 from pygame.locals import *
-import bobject
-import isprite
+from engine import idefaults
+from engine import bobject
+from engine import isprite
 
 
 class PlayerSprite(isprite.ISprite):
@@ -22,7 +22,6 @@ class PlayerSprite(isprite.ISprite):
     def draw_sprite(self, a_screen):
         """draw method draws the player sprite in the surface.
         """
-        #center = (self.x + config.CELL_WIDTH / 2, self.y + config.CELL_LENGTH / 2)
         center = (self.width / 2, self.length / 2)
         ratio = (self.width / 2) - 2
         pygame.draw.circle(a_screen, self.foreground_color, center, ratio)
@@ -37,10 +36,10 @@ class Player(bobject.BObject):
         """
         super().__init__(**kwargs)
         self.sprite = PlayerSprite(a_position=self.board_to_screen(self.position),
-            a_width=config.CELL_LENGTH,
-            a_length=config.CELL_LENGTH,
-            a_foreground_color=colors.RED,
-            a_key_color=config.DEFAULT_SPRITE_COLOR)
+            a_width=idefaults.DEFAULT_WIDTH,
+            a_length=idefaults.DEFAULT_LENGTH,
+            a_foreground_color=icolors.RED,
+            a_key_color=idefaults.DEFAULT_SPRITE_COLOR)
 
     def set_position(self, a_position):
         """set_position method sets the player instance in a new board

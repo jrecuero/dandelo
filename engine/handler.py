@@ -1,11 +1,9 @@
 """handler.py module implements the game main controller.
 """
 
-from distutils.command.config import config
 import pygame
-import ihandler
-import config
-import menu
+from . import ihandler
+from . import menu
 
 
 class GameHandler(ihandler.IHandler):

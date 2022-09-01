@@ -3,9 +3,9 @@
 
 import random
 import pygame
-import colors
-import config
-import isprite
+from . import icolors
+from . import idefaults
+from . import isprite
 
 
 class Board:
@@ -84,7 +84,7 @@ class Board:
                 cell_spec = {
                         "x": row,
                         "y": column,
-                        "color": colors.BLUE,
+                        "color": icolors.BLUE,
                         # "color": random.choice([colors.BLACK, colors.RED, colors.GREEN, colors.BLUE, colors.WHITE]),
                         "gx": self.x_origin + self.cell_width * row,
                         "gy": self.y_origin + self.cell_length * column,
@@ -113,11 +113,11 @@ class BCell:
         """
         self.x = a_specs.get("x", 0)
         self.y = a_specs.get("y", 0)
-        self.color = a_specs.get("color", colors.BLACK)
+        self.color = a_specs.get("color", icolors.BLACK)
         self.gx = a_specs.get("gx", 0)
         self.gy = a_specs.get("gy", 0)
-        self.gwidth = a_specs.get("width", config.CELL_WIDTH)
-        self.glength = a_specs.get("length", config.CELL_LENGTH)
+        self.gwidth = a_specs.get("width", idefaults.DEFAULT_WIDTH)
+        self.glength = a_specs.get("length", idefaults.DEFAULT_LENGTH)
         self.gborder = a_specs.get("border", 1)
         self.gcell = GCell(a_foreground_color=self.color,
             a_position=pygame.Vector2(self.gx, self.gy),

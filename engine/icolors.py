@@ -1,4 +1,4 @@
-"""colors.py module defines all colors to be used by the game.
+"""icolors.py module defines all colors to be used by the game.
 """
 
 BLACK = (0, 0, 0)
