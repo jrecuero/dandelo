@@ -34,6 +34,9 @@ class Board:
 
         - size attribute contains the size for any square regular board (same
         width and length).
+
+        - notifier attribute keeps the callback to be used to notify events to
+        the proper parent.
         """
         self.x_origin = a_x_origin
         self.y_origin = a_y_origin
@@ -42,6 +45,7 @@ class Board:
         self.cells = []
         self.sprite_group = pygame.sprite.Group()
         self.size = None
+        self.notifier = None
 
     def get_sprite(self):
         """get_sprite method returns the sprite instance to be added to the

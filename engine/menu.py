@@ -62,40 +62,49 @@ class PopUpMenu(pygame.sprite.Sprite):
         """
         return self
 
+    def set_position(self, a_position):
+        """"set_position method sets a new position for the menu.
+        """
+        self.position = a_position
+        self.rect.topleft = self.position
+        self.draw()
+
     def draw(self):
         """draw methods displays the menu in the surface.
         """
         self.image.fill(icolors.WHITE)
         background_color = icolors.WHITE
-        foreground_color = icolors.BLUE
+        foreground_color = icolors.BLACK
         y = 0
         for index, option in enumerate(self.options):
             if index == self.selected:
-                background_color = icolors.BLUE
+                background_color = icolors.BLACK
                 foreground_color = icolors.WHITE
             else:
                 background_color = icolors.WHITE
-                foreground_color = icolors.BLUE
+                foreground_color = icolors.BLACK
             pygame.draw.rect(self.image, background_color, (0, y, self.width, self.length))
             pygame.draw.rect(self.image, icolors.BLACK, (0, y, self.width, self.length), 1)
             option_image = self.font.render(option, True, foreground_color)
             self.image.blit(option_image, (self.padding, y + self.padding))
             y += self.length
 
-    def handle_keyboard_event(self, a_event, a_release_callback=None):
+    def handle_keyboard_event(self, a_event):
         """handle_keyboard_event method moves the player with the given
         keyboard inputs.
         """
+        v_selected = None
         if a_event.key == K_UP:
             if self.selected != 0:
                 self.selected -= 1
         if a_event.key == K_DOWN:
             if self.selected < len(self.options) - 1:
                 self.selected += 1
-        if a_event.key == K_RETURN and a_release_callback:
-            print("option {} was selected".format(self.options[self.selected]))
-            a_release_callback("player")
+        if a_event.key == K_RETURN:
+            v_selected = self.options[self.selected]
         self.draw()
+        return v_selected
+
 
     def update(self):
         """update method is called by the sprite Group.

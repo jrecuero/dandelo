@@ -7,6 +7,8 @@ from pygame.locals import *
 from engine import idefaults
 from engine import bobject
 from engine import isprite
+from engine import gevent
+from . import config
 
 
 class PlayerSprite(isprite.ISprite):
@@ -48,11 +50,12 @@ class Player(bobject.BObject):
         self.previous_position = self.position
         self.position = a_position
 
-    def handle_keyboard_event(self, a_event, a_release_callback=None):
+    def handle_keyboard_event(self, a_event):
         """handle_keyboard_event method moves the player with the given
         keyboard inputs.
         """
         self.previous_position = self.position
+        v_result = a_event.key in [K_UP, K_DOWN, K_LEFT, K_RIGHT, K_RETURN]
         if a_event.key == K_UP:
             self.position.y -= 1
         if a_event.key == K_DOWN:
@@ -61,8 +64,10 @@ class Player(bobject.BObject):
             self.position.x -= 1
         if a_event.key == K_RIGHT:
             self.position.x += 1
-        if a_event.key == K_RETURN and a_release_callback:
-            a_release_callback("popup")
+        if a_event.key == K_RETURN:
+            v_position = self.board_to_screen(self.position)
+            self.notifier(gevent.GEvent("action/top/scene:this", {"object": self, "scene":config.SCENE_POPUP, "position": v_position}))
         if self.out_of_bounds and self.out_of_bounds(self.position):
             self.set_position(*self.old_position)
         self.sprite.rect.topleft = self.board_to_screen(self.position)
+        return v_result

@@ -2,3 +2,6 @@
 """
 
 FPS = 30
+
+SCENE_BOARD = "scene/board"
+SCENE_POPUP = "scene/popup"

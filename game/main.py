@@ -7,68 +7,135 @@ from pygame.locals import *
 from engine import icolors
 from engine import idefaults
 from engine import board
+from engine import ihandler
 from engine import handler
 from engine import scene
 from engine import menu
 from engine import idefaults
+from engine import engine
+from engine import gevent
 from game import config
 from game import player
+from game import popup
 
-def create_board_scene(game_handler):
+
+class BoardScene(scene.Scene):
+    """BoardScene class contains all functionality to create the board
+    scene.
+    """
+
+    def __init__(self, **kwargs):
+        """__init__ method creates a new BoardScene instance.
+        """
+        super().__init__(a_name=config.SCENE_BOARD, **kwargs)
+
+    #def handle_end_scene(self, a_object):
+    #    """handle_end_scene method handles the end of the scene.
+    #    """
+    #    def _inner_(**kwargs):            
+    #        kwargs = {"object": a_object}
+    #        return "action/scene/end", kwargs
+    #    return _inner_
+
+    @ihandler.callback
+    def handle_end_scene(self, **kwargs):
+        """handle_end_scene method handles the end of the scene.
+        """
+        return gevent.GEvent("action/scene/end", kwargs)
+
+    def end_scene(self, **kwargs):
+        """end_scene method ends the scene.
+        """
+        return "action/scene/end", kwargs
+
+
+class PopUpMenuScene(scene.Scene):
+    """PopUpMenuScene class contains all functionality to create the popup
+    menu scene.
+    """
+
+    def __init__(self, **kwargs):
+        """__init__ method creates a new PopUpMenuScene instance.
+        """
+        super().__init__(a_name=config.SCENE_POPUP)
+        self.position = None
+
+    def open(self, **kwargs):
+        """open method is called when a scene is activated the first
+        time and it contains any functionality required to start the
+        scene.
+        """
+        self.position = kwargs.get("position", self.position)
+        self.objects[0].set_position(self.position)
+    
+    def end_scene(self):
+        """end_scene method ends the scene.
+        """
+        print(self, " end the scene")
+
+
+def handle_scene_this(a_event):
+    """handler_scene_this function handles action scene:this.
+    """
+    v_handler = a_event.handler
+    if v_handler is None:
+        return False
+    print(a_event)
+    v_scene = v_handler.get_scene_by_name(config.SCENE_POPUP)
+    if v_scene is None:
+        return False        
+    v_handler.activate_this_scene(v_scene, **a_event.data)
+    return True
+
+def handle_scene_end(a_event):
+    """handler_scene_end function handles action scene:end.
+    """
+    v_handler = a_event.handler
+    if v_handler is None:
+        return False
+    print("menu selected ", a_event.data["selected"])
+    v_handler.end_active_and_reactivate_next()
+    return True
+
+def create_board_scene(a_game_handler):
     """create_board_scene function creates the game board scene.
     """
-    game_board = board.Board(10, 10, idefaults.DEFAULT_WIDTH, idefaults.DEFAULT_LENGTH)
-    game_board.create_default_board(8)
-    game_player = player.Player(a_position=pygame.Vector2(), a_board_to_screen=game_board.board_to_screen)
-    game_player.out_of_bounds = game_board.out_of_bounds
-    board_scene = scene.Scene()
-    board_scene.add_object(game_board)
-    board_scene.add_object(game_player)
-    board_scene.keyboard_control_object = game_player
-    board_scene.keyboard_release_callback = game_handler.release_player()
-    game_handler.add_scene(board_scene)
-    game_handler.activate_scene(board_scene)
+    v_game_board = board.Board(10, 10, idefaults.DEFAULT_WIDTH, idefaults.DEFAULT_LENGTH)
+    v_game_board.create_default_board(8)
+    v_game_player = player.Player(a_position=pygame.Vector2(), a_board_to_screen=v_game_board.board_to_screen)
+    v_game_player.out_of_bounds = v_game_board.out_of_bounds
+    v_board_scene = BoardScene()
+    v_board_scene.add_object(v_game_board)
+    v_board_scene.add_object(v_game_player)
+    v_board_scene.keyboard_control_object = v_game_player
+    #v_board_scene.keyboard_release_callback = a_game_handler.release_player()
+    v_board_scene.keyboard_release_callback = v_board_scene.handle_end_scene
+    #v_board_scene.add_action("scene/end", v_board_scene.end_scene)
+    a_game_handler.add_scene(v_board_scene)
+    a_game_handler.activate_this_scene(v_board_scene)
+    a_game_handler.add_action("scene:this", handle_scene_this)
 
-def create_menu_scene(game_handler):
+def create_menu_scene(a_game_handler):
     """create_menu_scene function creates the game menu scene.
     """
-    game_menu = menu.PopUpMenu((300, 10), ["open", "world", "battle", "end"])
-    menu_scene = scene.Scene()
-    menu_scene.add_object(game_menu)
-    menu_scene.keyboard_control_object = game_menu
-    menu_scene.keyboard_release_callback = game_handler.release_menu()
-
-
-def create_game():
-    """create_scenario function creates the game scenario.
-    """
-    game_handler = handler.GameHandler()
-    return game_handler
+    #v_game_menu = menu.PopUpMenu((300, 10), ["open", "world", "battle", "end"])
+    v_game_popup_menu = popup.PopUp()
+    v_menu_scene = PopUpMenuScene()
+    v_menu_scene.add_object(v_game_popup_menu)
+    v_menu_scene.keyboard_control_object = v_game_popup_menu
+    a_game_handler.add_scene(v_menu_scene)
+    a_game_handler.add_action("scene:end", handle_scene_end)
 
 
 def main():
     """main function is the main game function.
     """
-    pygame.init()
-    frame_per_second = pygame.time.Clock()
-    pygame.display.set_caption("dandelo")
-    screen = pygame.display.set_mode((640, 480))
-    running = True
-    game_handler = create_game()
-    create_board_scene(game_handler)
-    create_menu_scene(game_handler)
-    while running:
-        screen.fill(icolors.WHITE)
-        game_handler.draw(screen)
-        pygame.display.update()
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                running = False
-            if event.type == KEYDOWN:
-                game_handler.handle_keyboard_event(event)
-        game_handler.update()
-        frame_per_second.tick(config.FPS)
-    pygame.quit()
+    #pygame.init()
+    v_engine = engine.Engine("dandelo", config.FPS)
+    v_engine.init()
+    create_board_scene(v_engine.handler)
+    create_menu_scene(v_engine.handler)
+    v_engine.run()
     sys.exit()
 
 

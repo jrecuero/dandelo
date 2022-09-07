@@ -19,10 +19,14 @@ class IObject:
 
         - sprite pygame Sprite keeps an optional sprite to be displayed for
         the game object.
+
+        - notifier attribute keeps the callback to be used to notify events to
+        the proper parent.
         """
         self.uid = str(uuid.uuid1())
         self.name = a_name if a_name else self.uid
         self.sprite = a_sprite
+        self.notifier = None
 
     def get_sprite(self):
         """get_sprite method returns the sprite instance to be added to the
