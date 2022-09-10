@@ -3,6 +3,7 @@ interface functionality.
 """
 
 from . import gevent
+from . import itimer
 
 
 def callback(a_func):
@@ -57,6 +58,8 @@ class IHandler:
 
         - events list stores all events to be processed by the handler.
 
+        - timers attribute is a list with all timers to be handled.
+
         - notifier attribute keeps the callback to be used to notify events to
         the proper parent.
         """ 
@@ -65,6 +68,7 @@ class IHandler:
         self.keyboard_control_object = None
         self.actions = {}
         self.events = []
+        self.timers = []
         self.notifier = None
 
     def add_object(self, a_object):
@@ -161,3 +165,25 @@ class IHandler:
             if v_role in self.actions:
                 return self.actions[v_role](a_event)
         return False
+
+    def add_timer(self, a_timer):
+        """add_timer method adds a new timer to be handled.
+        """
+        if a_timer in self.timers:
+            return False
+        self.timers.append(a_timer)
+        return True
+
+    def remove_timer(self, a_timer):
+        """remove_timer method removes a timer to be handled.
+        """
+        if a_timer not in self.timers:
+            return False
+        self.timers.remove(a_timer)
+        return True
+
+    def tick_timers(self, a_fps):
+        """tick_timers method updates all timers being handled.
+        """
+        for l_timer in self.timers:
+            l_timer.tick(self, a_fps)

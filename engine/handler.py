@@ -165,47 +165,6 @@ class GameHandler(ihandler.IHandler):
             return False
         return self.reactivate_top_scene()
 
-    def _activate_scene(self, a_scene, a_queue=False, a_load=True):
-        """activate_scene method sets the given scene as the active one.
-        If a_queue is True, it means it is placed on top of the previous
-        scenario, instead of replacing it.
-        If a_load is True, it will load all objects from the scene being
-        activated. This should be set to False when reactivating an scene
-        already loaded.
-        """
-        if a_scene not in self.scenes:
-            return False
-        if a_queue is False:
-            self.deactivate_scene(self.get_active_scene())
-        # Add the scene to the queue of active scenes and add all
-        # scene objects to the handler.
-        self.active_scene.append(a_scene)
-        if a_load:
-            for object in a_scene.objects:
-                self.add_object(object)
-        self.keyboard_control_object = a_scene.keyboard_control_object
-        return True
-
-    def _deactivate_scene(self, a_scene, a_next=True):
-        """deactivate_scene methods sets the given scene as non-active.
-        If a_next is True, it means it is removed from the queue and the
-        previous scene is automatically activated.
-        """
-        if a_scene is None or a_scene != self.get_active_scene():
-            return False
-        # call to the scene close method in order to notify to the scene that
-        # is being deactivated.
-        self.active_scene.close()
-        # remove the scene from the queue of active scenes and remove
-        # all scene objects from the handler.
-        self.active_scene.remove(a_scene)
-        for l_object in a_scene.objects:
-            self.remove_object(l_object)
-        if a_next and self.get_active_scene():
-            # Set a_load as False, because scene object have been
-            # previously loaded by the handler.
-            self.active_scene(self.get_active_scene(), a_load=False)
-
     def draw(self, a_screen):
         """draw method calls to draw for every game object contained in
         the handler.
@@ -245,3 +204,27 @@ class GameHandler(ihandler.IHandler):
         if v_active_scene:
             v_active_scene.handle_all_events()
         super().handle_all_events()
+
+    def tick_timers(self, a_fps):
+        """tick_timers method updates all timers being handled.
+        """
+        v_active_scene = self.get_active_scene()
+        if v_active_scene:
+            v_active_scene.tick_timers(a_fps)
+        for l_timer in self.timers:
+            l_timer.tick(self, a_fps)
+
+    def start_frame(self, a_fps):
+        """start_frame method is called by the engine at the start of every
+        frame.
+        """
+        self.tick_timers(a_fps)
+        v_active_scene = self.get_active_scene()
+        if v_active_scene:
+            v_active_scene.start_frame(a_fps)
+
+        
+    def end_frame(self):
+        """end_frame method is called by the engine at the end of every frame.
+        """
+        pass

@@ -14,6 +14,9 @@ class PopUp(gobject.GObject):
 
     def __init__(self, a_position=pygame.Vector2()):
         """__init__ method creates a new PopUp instance.
+
+        - position attribute contains the screen X and Y position where popup
+        menu should be displayed.
         """
         super().__init__()
         self.position = a_position

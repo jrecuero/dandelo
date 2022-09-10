@@ -53,6 +53,7 @@ class Engine:
             self.screen.fill(icolors.WHITE)
             self.handler.draw(self.screen)
             pygame.display.update()
+            self.handler.start_frame(self.fps)
             for l_event in pygame.event.get():
                 if l_event.type == QUIT:
                     self.is_running = False
@@ -60,5 +61,6 @@ class Engine:
                     self.handler.handle_keyboard_event(l_event)
             self.handler.update()
             self.handler.handle_all_events()
+            self.handler.end_frame()
             self.clock.tick(self.fps)
         pygame.quit()        

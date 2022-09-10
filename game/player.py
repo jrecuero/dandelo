@@ -37,7 +37,8 @@ class Player(bobject.BObject):
         """__init__ method initializes a Player instance.
         """
         super().__init__(**kwargs)
-        self.sprite = PlayerSprite(a_position=self.board_to_screen(self.position),
+        #self.sprite = PlayerSprite(a_position=self.board_to_screen(self.board_position),
+        self.sprite = PlayerSprite(a_position=self.position,
             a_width=idefaults.DEFAULT_WIDTH,
             a_length=idefaults.DEFAULT_LENGTH,
             a_foreground_color=icolors.RED,
@@ -47,27 +48,28 @@ class Player(bobject.BObject):
         """set_position method sets the player instance in a new board
         position.
         """
-        self.previous_position = self.position
-        self.position = a_position
+        #self.previous_position = self.board_position.copy()
+        self.set_board_position(a_position)
 
     def handle_keyboard_event(self, a_event):
         """handle_keyboard_event method moves the player with the given
         keyboard inputs.
         """
-        self.previous_position = self.position
+        self.previous_position = self.board_position.copy()
         v_result = a_event.key in [K_UP, K_DOWN, K_LEFT, K_RIGHT, K_RETURN]
         if a_event.key == K_UP:
-            self.position.y -= 1
+            self.board_position.y -= 1
         if a_event.key == K_DOWN:
-            self.position.y += 1
+            self.board_position.y += 1
         if a_event.key == K_LEFT:
-            self.position.x -= 1
+            self.board_position.x -= 1
         if a_event.key == K_RIGHT:
-            self.position.x += 1
+            self.board_position.x += 1
         if a_event.key == K_RETURN:
-            v_position = self.board_to_screen(self.position)
+            v_position = self.board_to_screen(self.board_position)
             self.notifier(gevent.GEvent("action/top/scene:this", {"object": self, "scene":config.SCENE_POPUP, "position": v_position}))
-        if self.out_of_bounds and self.out_of_bounds(self.position):
-            self.set_position(*self.old_position)
-        self.sprite.rect.topleft = self.board_to_screen(self.position)
+        if self.out_of_bounds and self.out_of_bounds(self.board_position):
+            self.set_position(self.previous_position)
+        #self.sprite.rect.topleft = self.board_to_screen(self.board_position)
+        self.sprite.rect.topleft = self.position
         return v_result

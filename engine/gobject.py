@@ -18,5 +18,25 @@ class GObject(iobject.IObject):
         - position attribute stores the X and Y position in the screen.
 
         """
-        super().__init__(kwargs.get("a_name", None), kwargs.get("a_sprite", None))
-        self.position = kwargs.get("a_position", pygame.Vector2())
+        super().__init__(kwargs.get("a_name", None))
+        self._position = kwargs.get("a_position", pygame.Vector2())
+        self.sprite = kwargs.get("a_sprite", None)
+
+    @property
+    def position(self):
+        """position property returns the actual position in the screen.
+        """
+        return self._position
+
+    @position.setter
+    def position(self, a_position):
+        """position setter property sets a new value for the position in the
+        screen.
+        """
+        self._position = a_position
+
+    def get_sprite(self):
+        """get_sprite method returns the sprite instance to be added to the
+        handler sprite group.
+        """
+        return self.sprite

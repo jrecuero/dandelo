@@ -5,10 +5,11 @@ import random
 import pygame
 from . import icolors
 from . import idefaults
+from . import gobject
 from . import isprite
 
 
-class Board:
+class Board(gobject.GObject):
     """Board class implements the board where the player will move and act.
     """
 
@@ -38,20 +39,14 @@ class Board:
         - notifier attribute keeps the callback to be used to notify events to
         the proper parent.
         """
+        super().__init__()
         self.x_origin = a_x_origin
         self.y_origin = a_y_origin
         self.cell_width = a_cell_width
         self.cell_length = a_cell_length
         self.cells = []
-        self.sprite_group = pygame.sprite.Group()
+        self.sprite = pygame.sprite.Group()
         self.size = None
-        self.notifier = None
-
-    def get_sprite(self):
-        """get_sprite method returns the sprite instance to be added to the
-        handler sprite group.
-        """
-        return self.sprite_group
 
     def board_to_screen(self, a_position):
         """board_to_screen method translates some board coordinates to screen
@@ -98,14 +93,12 @@ class Board:
                         }
                 cell = BCell(cell_spec)
                 self.cells.append(cell)
-                self.sprite_group.add(cell.gcell)
+                self.sprite.add(cell.gcell)
 
     def draw(self, a_screen):
         """draw method draws all board cells in the surface.
         """
-        #for cell in self.cells:
-        #    cell.draw(a_screen)
-        self.sprite_group.draw(a_screen)
+        self.sprite.draw(a_screen)
 
 
 class BCell:

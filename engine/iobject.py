@@ -10,7 +10,7 @@ class IObject:
     object created in the game.
     """
 
-    def __init__(self, a_name=None, a_sprite=None):
+    def __init__(self, a_name=None):
         """__init__ method creates an IObject instance.
 
         - uuid attribute stores the object unique identifier.
@@ -25,11 +25,17 @@ class IObject:
         """
         self.uid = str(uuid.uuid1())
         self.name = a_name if a_name else self.uid
-        self.sprite = a_sprite
         self.notifier = None
+        self.opened = False
 
-    def get_sprite(self):
-        """get_sprite method returns the sprite instance to be added to the
-        handler sprite group.
+    def open(self, a_handler):
+        """open method is a virtual call done by the handler the first time
+        the object is being activated in the scene.
         """
-        return self.sprite
+        self.opened = True
+    
+    def close(self, a_handler):
+        """close method is a virtual call done by the handler when the scene
+        where object is places is deactivated.
+        """
+        self.opened = False
