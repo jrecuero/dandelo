@@ -1,7 +1,7 @@
 """board.py module implements all classes related with game and graphic board.
 """
 
-import random
+# import random
 import pygame
 from . import icolors
 from . import idefaults
@@ -70,8 +70,8 @@ class Board(gobject.GObject):
         """out_of_bounds method checks if the given board coordinates are
         outside the board.
         """
-        #return (a_x < 0) or (a_x >= self.size) or (a_y < 0) or (a_y >= self.size)
-        return not(self.in_bounds(a_position))
+        # return (a_x < 0) or (a_x >= self.size) or (a_y < 0) or (a_y >= self.size)
+        return not self.in_bounds(a_position)
 
     def create_default_board(self, a_number_of_cells=8):
         """create_default_board method creates a default square board with the

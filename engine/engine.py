@@ -28,6 +28,10 @@ class Engine:
 
         - is_running attribute stores the flag showing if the engine has to
         keep running.
+
+        - width attribute stores the width of the game window.
+
+        - length attribute stores the length of the game window.
         """
         self.name = a_name
         self.fps = a_fps
@@ -35,15 +39,19 @@ class Engine:
         self.clock = None
         self.screen = None
         self.is_running = False
+        self.width = None
+        self.length = None
 
-    def init(self):
+    def init(self, a_width, a_length):
         """init method initializes the engine.
         """
+        self.width = a_width
+        self.length = a_length
         pygame.init()
         self.clock = pygame.time.Clock()
         self.handler = handler.GameHandler()
         pygame.display.set_caption(self.name)
-        self.screen = pygame.display.set_mode((640, 480))
+        self.screen = pygame.display.set_mode((self.width, self.length))
 
     def run(self):
         """run method runs the engine.
@@ -59,7 +67,7 @@ class Engine:
                     self.is_running = False
                 if l_event.type == KEYDOWN:
                     self.handler.handle_keyboard_event(l_event)
-            self.handler.update()
+            self.handler.update(self.fps)
             self.handler.handle_all_events()
             self.handler.end_frame()
             self.clock.tick(self.fps)

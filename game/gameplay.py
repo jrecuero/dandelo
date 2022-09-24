@@ -15,7 +15,7 @@ def handle_scene_this(a_event):
     print(a_event)
     v_scene = v_handler.get_scene_by_name(config.SCENE_POPUP)
     if v_scene is None:
-        return False        
+        return False
     v_handler.activate_this_scene(v_scene, **a_event.data)
     return True
 

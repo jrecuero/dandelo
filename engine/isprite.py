@@ -24,11 +24,11 @@ class ISprite(pygame.sprite.Sprite):
         - out_of_bounds function is called to check if the player is inside
         or outside the board.
 
-        - width attribute stores the cell sprite width.
+        - width attribute stores the sprite width.
 
-        - length attribute stores the cell sprite length.
+        - length attribute stores the sprite length.
 
-        - border attribute stores if the cell sprite board (0 means it is
+        - border attribute stores if the sprite board (0 means it is
         filled with the color).
 
         - foreground_color attribute stores the pygame Color to be used to

@@ -2,17 +2,18 @@
 """
 
 import sys
-import pygame
-from engine import engine
+# import pygame
 from game import config
 from game import gameplay
+from engine import engine
+
 
 def main():
     """main function is the main game function.
     """
-    #pygame.init()
+    # pygame.init()
     v_engine = engine.Engine("dandelo", config.FPS)
-    v_engine.init()
+    v_engine.init(config.WIDTH, config.LENGTH)
     gameplay.create_board_scene(v_engine.handler)
     gameplay.create_menu_scene(v_engine.handler)
     v_engine.run()

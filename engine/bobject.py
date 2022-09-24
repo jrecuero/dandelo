@@ -16,13 +16,17 @@ class BObject(gobject.GObject):
 
         - position attribute stores the X and Y position in the board.
 
-        - board_to_screen function translate a board position to a graphical
+        - board_to_screen function translates a board position to a graphical
         position. It is only required to be used if the board object contains
         an sprite.
+
+        - out_of_bounds function checks if a board object is inside or outside
+        the board.
         """
         super().__init__(**kwargs)
         self.board_position = kwargs.get("a_board_position", pygame.Vector2())
         self.board_to_screen = kwargs.get("a_board_to_screen", None)
+        self.out_of_bounds = kwargs.get("a_out_of_bounds", None)
 
     @property
     def position(self):
@@ -45,4 +49,3 @@ class BObject(gobject.GObject):
         """
         self.board_position = a_position
         _ = self.position
-

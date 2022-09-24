@@ -8,6 +8,7 @@ from engine import idefaults
 from engine import bobject
 from engine import isprite
 from engine import gevent
+from engine import support
 from . import config
 
 
@@ -20,13 +21,30 @@ class PlayerSprite(isprite.ISprite):
         """__init__ method creates a new PlayerSprite instance.
         """
         super().__init__(**kwargs)
+        self.animations = support.import_images_from_path("game/graphics/player/idle")
+        self.animation_index = 0.0
+        self.image = self.animations[int(self.animation_index)]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.position
 
-    def draw_sprite(self, a_screen):
-        """draw method draws the player sprite in the surface.
+    # def draw_sprite(self, a_screen):
+    #     """draw method draws the player sprite in the surface.
+    #     """
+    #     # center = (self.width / 2, self.length / 2)
+    #     # ratio = (self.width / 2) - 2
+    #     # pygame.draw.circle(a_screen, self.foreground_color, center, ratio)
+    #     pass
+
+    def update(self, a_fps):
+        """update method is called by the sprite group.
         """
-        center = (self.width / 2, self.length / 2)
-        ratio = (self.width / 2) - 2
-        pygame.draw.circle(a_screen, self.foreground_color, center, ratio)
+        v_number_images = len(self.animations)
+        v_animation_per_second = 2
+        self.animation_index += v_number_images * v_animation_per_second / a_fps
+        if self.animation_index >= v_number_images:
+            self.animation_index = 0.0
+        self.image = self.animations[int(self.animation_index)]
+        
 
 
 class Player(bobject.BObject):
@@ -37,18 +55,19 @@ class Player(bobject.BObject):
         """__init__ method initializes a Player instance.
         """
         super().__init__(**kwargs)
-        #self.sprite = PlayerSprite(a_position=self.board_to_screen(self.board_position),
+        # self.sprite = PlayerSprite(a_position=self.board_to_screen(self.board_position),
         self.sprite = PlayerSprite(a_position=self.position,
             a_width=idefaults.DEFAULT_WIDTH,
             a_length=idefaults.DEFAULT_LENGTH,
             a_foreground_color=icolors.RED,
             a_key_color=idefaults.DEFAULT_SPRITE_COLOR)
+        self.previous_position = None
 
     def set_position(self, a_position):
         """set_position method sets the player instance in a new board
         position.
         """
-        #self.previous_position = self.board_position.copy()
+        # self.previous_position = self.board_position.copy()
         self.set_board_position(a_position)
 
     def handle_keyboard_event(self, a_event):
@@ -70,6 +89,6 @@ class Player(bobject.BObject):
             self.notifier(gevent.GEvent("action/top/scene:this", {"object": self, "scene":config.SCENE_POPUP, "position": v_position}))
         if self.out_of_bounds and self.out_of_bounds(self.board_position):
             self.set_position(self.previous_position)
-        #self.sprite.rect.topleft = self.board_to_screen(self.board_position)
+        # self.sprite.rect.topleft = self.board_to_screen(self.board_position)
         self.sprite.rect.topleft = self.position
         return v_result

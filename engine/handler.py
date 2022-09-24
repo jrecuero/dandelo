@@ -1,9 +1,7 @@
 """handler.py module implements the game main controller.
 """
 
-import pygame
 from . import ihandler
-from . import menu
 
 
 class GameHandler(ihandler.IHandler):
@@ -25,31 +23,8 @@ class GameHandler(ihandler.IHandler):
         - events list contains all events handle has to process.
         """
         super().__init__()
-        self.sprites = pygame.sprite.Group()
         self.scenes = []
         self.active_scene = []
-
-    def add_object(self, a_object):
-        """add_object method adds the given object to be handle.
-        """
-        if not super().add_object(a_object):
-            return False
-        if hasattr(a_object, "get_sprite"):
-            object_sprite = a_object.get_sprite()
-            if object_sprite:
-                self.sprites.add(object_sprite)
-        return True
-
-    def remove_object(self, a_object):
-        """remove_object method removes the given object to be handled.
-        """
-        if not super().remove_object(a_object):
-            return False
-        if hasattr(a_object, "get_sprite"):
-            object_sprite = a_object.get_sprite()
-            if object_sprite:
-                self.sprites.remove(object_sprite)
-        return True
 
     def add_scene(self, a_scene):
         """add_scene method adds an scene to be handled.
@@ -58,7 +33,7 @@ class GameHandler(ihandler.IHandler):
             return False
         self.scenes.append(a_scene)
         if hasattr(a_scene, "notifier") and a_scene.notifier is None:
-            a_scene.notifier = self.event_notifier 
+            a_scene.notifier = self.event_notifier
 
         return True
 
@@ -97,6 +72,7 @@ class GameHandler(ihandler.IHandler):
         for l_object in a_scene.objects:
             self.add_object(l_object)
         self.keyboard_control_object = a_scene.keyboard_control_object
+        return True
 
     def reactivate_this_scene(self, a_scene):
         """reactivate_scene methods reactivate an scene that was already
@@ -144,18 +120,18 @@ class GameHandler(ihandler.IHandler):
         and set the given scene as active now.
         """
         v_active_scene = self.get_active_scene()
-        if self.deactivate_scene(v_active_scene) is False:
+        if self.deactivate_this_scene(v_active_scene) is False:
             return False
-        return self.activate_scene(a_scene)
+        return self.activate_this_scene(a_scene)
 
     def end_active_and_reactivate_this_scene(self, a_scene):
         """end_active_and_reactivate_this_scene method deactivates the active
         scene and reactivate the given scene.
         """
         v_active_scene = self.get_active_scene()
-        if self.deactivate_scene(v_active_scene) is False:
+        if self.deactivate_this_scene(v_active_scene) is False:
             return False
-        return self.reactivate_scene(a_scene)
+        return self.reactivate_this_scene(a_scene)
 
     def end_active_and_reactivate_next(self):
         """end_active_and_reactivate_next method deactivates the active scene
@@ -169,23 +145,16 @@ class GameHandler(ihandler.IHandler):
         """draw method calls to draw for every game object contained in
         the handler.
         """
-        self.sprites.draw(a_screen)
+        v_active_scene = self.get_active_scene()
+        if v_active_scene:
+            v_active_scene.draw(a_screen)
+        super().draw(a_screen)
 
-    def update(self):
+    def update(self, a_fps):
         """update method updates the game handler and calls any update for
         any children.
         """
-        self.sprites.update()
-
-    def add_event(self, a_event):
-        """add_event methods add a new event to be handled.
-        """
-        self.events.append(a_event)
-
-    def next_event(self):
-        """next_event method returns the first event.
-        """
-        return self.events.pop(0)
+        self.sprites.update(a_fps)
 
     def handle_keyboard_event(self, a_pygame_event):
         """handle_keyboard_event method pass all keyboard events to the
@@ -193,8 +162,7 @@ class GameHandler(ihandler.IHandler):
         """
         v_active_scene = self.get_active_scene()
         if v_active_scene:
-            v_event = v_active_scene.handle_keyboard_event(a_pygame_event)
-            return v_event
+            return v_active_scene.handle_keyboard_event(a_pygame_event)
         return super().handle_keyboard_event(a_pygame_event)
 
     def handle_all_events(self):
@@ -223,7 +191,6 @@ class GameHandler(ihandler.IHandler):
         if v_active_scene:
             v_active_scene.start_frame(a_fps)
 
-        
     def end_frame(self):
         """end_frame method is called by the engine at the end of every frame.
         """

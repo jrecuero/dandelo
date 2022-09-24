@@ -4,7 +4,7 @@
 import pygame
 from engine import icolors
 from engine import scene
-from engine import iobject
+from engine import gobject
 
 
 class Title(pygame.sprite.Sprite):
@@ -23,7 +23,8 @@ class Title(pygame.sprite.Sprite):
         self.image.blit(title_image, (300, 240))
         self.rect = self.image.get_rect()
         self.rect.topleft = (0, 0)
-        
+
+
 class TitleScene(scene.Scene):
     """TitleScene class contains all functionality for the title scene.
     """
@@ -32,5 +33,5 @@ class TitleScene(scene.Scene):
         """__init__ method creates a new TitleScene instance.
         """
         super().__init__()
-        self.title = iobject.IObject(a_sprite=Title())
+        self.title = gobject.GObject(a_sprite=Title())
         self.add_object(self.title)

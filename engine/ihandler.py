@@ -2,8 +2,7 @@
 interface functionality.
 """
 
-from . import gevent
-from . import itimer
+import pygame
 
 
 def callback(a_func):
@@ -62,9 +61,10 @@ class IHandler:
 
         - notifier attribute keeps the callback to be used to notify events to
         the proper parent.
-        """ 
+        """
         self.type = a_type
         self.objects = []
+        self.sprites = pygame.sprite.Group()
         self.keyboard_control_object = None
         self.actions = {}
         self.events = []
@@ -78,7 +78,11 @@ class IHandler:
             return False
         self.objects.append(a_object)
         if hasattr(a_object, "notifier") and a_object.notifier is None:
-            a_object.notifier = self.event_notifier 
+            a_object.notifier = self.event_notifier
+        if hasattr(a_object, "get_sprite"):
+            object_sprite = a_object.get_sprite()
+            if object_sprite:
+                self.sprites.add(object_sprite)
         return True
 
     def remove_object(self, a_object):
@@ -87,7 +91,17 @@ class IHandler:
         if a_object not in self.objects:
             return False
         self.objects.remove(a_object)
+        if hasattr(a_object, "get_sprite"):
+            object_sprite = a_object.get_sprite()
+            if object_sprite:
+                self.sprites.remove(object_sprite)
         return True
+
+    def draw(self, a_screen):
+        """draw method calls to draw for every game object contained in
+        the handler.
+        """
+        self.sprites.draw(a_screen)
 
     def handle_keyboard_event(self, a_event):
         """handle_keyboard_event method pass all keyboard events to the
@@ -137,6 +151,11 @@ class IHandler:
             return True
         return False
 
+    def next_event(self):
+        """next_event method returns the first event.
+        """
+        return self.events.pop(0)
+
     def event_notifier(self, a_event, **kwargs):
         """event_notifier method allows to create events for any object in the
         handler.
@@ -147,12 +166,12 @@ class IHandler:
         if a_event.destination == self.type:
             self.add_event(a_event)
         else:
-            self.notifier(a_event)
+            if self.notifier:
+                self.notifier(a_event)
 
     def handle_all_events(self):
         """handle_events method handles all events in the event list.
         """
-        v_events = self.events[:]
         for l_event in self.events[:]:
             if self.handle_event(l_event):
                 self.events.remove(l_event)
@@ -161,7 +180,7 @@ class IHandler:
         """handle_event method processes a given event.
         """
         if a_event.trigger == "action":
-            v_role =a_event.role
+            v_role = a_event.role
             if v_role in self.actions:
                 return self.actions[v_role](a_event)
         return False

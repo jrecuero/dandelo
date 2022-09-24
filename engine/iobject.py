@@ -17,9 +17,6 @@ class IObject:
 
         - name attribute stores the optional object name.
 
-        - sprite pygame Sprite keeps an optional sprite to be displayed for
-        the game object.
-
         - notifier attribute keeps the callback to be used to notify events to
         the proper parent.
         """

@@ -3,5 +3,8 @@
 
 FPS = 30
 
+WIDTH = 800
+LENGTH = 600
+
 SCENE_BOARD = "scene/board"
 SCENE_POPUP = "scene/popup"

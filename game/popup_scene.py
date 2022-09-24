@@ -5,10 +5,11 @@ from engine import scene
 from . import config
 from . import popup
 
+
 class PopUpMenuScene(scene.Scene):
     """PopUpMenuScene class contains all functionality to create the popup
     menu scene.
-    
+
     - position attribute contains screen X and Y coordinates where scene should
     be displayed.
 
@@ -32,9 +33,8 @@ class PopUpMenuScene(scene.Scene):
         """
         self.position = kwargs.get("position", self.position)
         self.popup_menu.set_position(self.position)
-    
+
     def end_scene(self):
         """end_scene method ends the scene.
         """
         print(self, " end the scene")
-

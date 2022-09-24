@@ -17,10 +17,22 @@ class GObject(iobject.IObject):
 
         - position attribute stores the X and Y position in the screen.
 
+        - sprite pygame Sprite keeps an optional sprite to be displayed for
+        the game object.
+
+        - width attribute stores the graphical object width.
+
+        - length attribute stores the graphical object length.
         """
         super().__init__(kwargs.get("a_name", None))
         self._position = kwargs.get("a_position", pygame.Vector2())
         self.sprite = kwargs.get("a_sprite", None)
+        if self.sprite:
+            self.width = self.sprite.width
+            self.height = self.sprite.height
+        else:
+            self.width = kwargs.get("a_width", None)
+            self.height = kwargs.get("a_height", None)
 
     @property
     def position(self):
