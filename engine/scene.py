@@ -34,7 +34,7 @@ class Scene(ihandler.IHandler):
         """start_frame method is called by the engine at the start of every
         frame.
         """
-        self.tick_timers(a_fps)
+        self.tick_timers()
         for l_object in [obj for obj in self.objects if not obj.opened]:
             l_object.open(self)
 

@@ -26,6 +26,22 @@ class GameHandler(ihandler.IHandler):
         self.scenes = []
         self.active_scene = []
 
+    def draw(self, a_screen):
+        """draw method calls to draw for every game object contained in
+        the handler.
+        """
+        v_active_scene = self.get_active_scene()
+        if v_active_scene:
+            v_active_scene.draw(a_screen)
+        super().draw(a_screen)
+
+    def update(self, a_fps):
+        """update method updates the game handler and calls any update for
+        any children.
+        """
+        self.sprites.update(a_fps)
+
+    # Scene methods -- start --
     def add_scene(self, a_scene):
         """add_scene method adds an scene to be handled.
         """
@@ -34,7 +50,6 @@ class GameHandler(ihandler.IHandler):
         self.scenes.append(a_scene)
         if hasattr(a_scene, "notifier") and a_scene.notifier is None:
             a_scene.notifier = self.event_notifier
-
         return True
 
     def remove_scene(self, a_scene):
@@ -140,22 +155,9 @@ class GameHandler(ihandler.IHandler):
         if not self.deactivate_active_scene():
             return False
         return self.reactivate_top_scene()
+    # Scene methods -- start --
 
-    def draw(self, a_screen):
-        """draw method calls to draw for every game object contained in
-        the handler.
-        """
-        v_active_scene = self.get_active_scene()
-        if v_active_scene:
-            v_active_scene.draw(a_screen)
-        super().draw(a_screen)
-
-    def update(self, a_fps):
-        """update method updates the game handler and calls any update for
-        any children.
-        """
-        self.sprites.update(a_fps)
-
+    # Handler pygame events methods -- start --
     def handle_keyboard_event(self, a_pygame_event):
         """handle_keyboard_event method pass all keyboard events to the
         object that had control of the keyboard.
@@ -164,7 +166,9 @@ class GameHandler(ihandler.IHandler):
         if v_active_scene:
             return v_active_scene.handle_keyboard_event(a_pygame_event)
         return super().handle_keyboard_event(a_pygame_event)
+    # Handler pygame events methods -- start --
 
+    # Handle engine events -- start --
     def handle_all_events(self):
         """handle_events method handles all events in the event list.
         """
@@ -172,21 +176,22 @@ class GameHandler(ihandler.IHandler):
         if v_active_scene:
             v_active_scene.handle_all_events()
         super().handle_all_events()
+    # Handle engine events -- start --
 
-    def tick_timers(self, a_fps):
+    def tick_timers(self):
         """tick_timers method updates all timers being handled.
         """
         v_active_scene = self.get_active_scene()
         if v_active_scene:
-            v_active_scene.tick_timers(a_fps)
+            v_active_scene.tick_timers()
         for l_timer in self.timers:
-            l_timer.tick(self, a_fps)
+            l_timer.tick(self)
 
     def start_frame(self, a_fps):
         """start_frame method is called by the engine at the start of every
         frame.
         """
-        self.tick_timers(a_fps)
+        self.tick_timers()
         v_active_scene = self.get_active_scene()
         if v_active_scene:
             v_active_scene.start_frame(a_fps)

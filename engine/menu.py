@@ -106,7 +106,7 @@ class PopUpMenu(pygame.sprite.Sprite):
         return v_selected
 
 
-    def update(self):
+    def update(self, a_fps):
         """update method is called by the sprite Group.
         """
         # This is the mouse click implementation.

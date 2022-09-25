@@ -19,6 +19,9 @@ class IObject:
 
         - notifier attribute keeps the callback to be used to notify events to
         the proper parent.
+
+        - opened attribute keeps the status if the object has been already
+        activated in a scene.
         """
         self.uid = str(uuid.uuid1())
         self.name = a_name if a_name else self.uid

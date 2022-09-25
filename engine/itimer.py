@@ -1,18 +1,18 @@
 """itimer.py module contains all functionality required for engine timers.
 """
 
-from ssl import AlertDescription
+import pygame
 from . import iobject
 
 ALWAYS_TIME = -1
 ONE_TIME = 1
 
-class ITimer(iobject.IObject):
-    """ITimer class contains all functionality to create an engine timer.
+class Timer(iobject.IObject):
+    """Timer class contains all functionality to create an engine timer.
     """
 
-    def __init__(self, a_name, a_timeout, a_callback, a_cb_args=None, a_time=ALWAYS_TIME):
-        """__init__ method creates a new ITimer instance.
+    def __init__(self, a_name, a_timeout, a_callback, a_cb_args={}, a_time=ONE_TIME):
+        """__init__ method creates a new Timer instance.
 
         = a_name attribute contains the name for the timer.
 
@@ -33,23 +33,36 @@ class ITimer(iobject.IObject):
         """
         super().__init__(a_name)
         self.timeout = a_timeout
-        self.timeout_counter = 0
+        self.start_time = 0
         self.times = a_time
         self.callback = a_callback
         self.callback_args = a_cb_args
+        self.active = False
 
-    def tick(self, a_fps):
+    def activate(self):
+        """activate method activates the timer.
+        """
+        self.activate = True
+        self.start_time = pygame.time.get_ticks()
+
+    def deactivate(self):
+        """deactivate method deactivates the timer.
+        """
+        self.activate = False
+        self.start_time = 0
+
+    def tick(self):
         """tick method adds a new tick time to the timer and check if it has
         expired.
         """
-        if self.times == 0:
+        if not self.activate:
             return False
-        v_timeout = 1000 / a_fps
-        self.timeout_counter += v_timeout
-        if self.timeout_counter >= self.timeout:
-            self.timeout_counter = 0
-            # TODO: Create an event instead of a direct call.
-            self.callback(self.callback_args)
+        v_actual_time = pygame.time.get_ticks()
+        if v_actual_time - self.start_time >= self.timeout:
+            self.callback(**self.callback_args)
+            self.start_time = v_actual_time 
             if self.times != ALWAYS_TIME:
                 self.times -= 1
+            if self.times == 0:
+                self.deactivate()
         return True
