@@ -25,7 +25,7 @@ class PlayerSprite(isprite.ISprite):
         super().__init__(**kwargs)
         self.animations = {"idle": [], "attack": []}
         for l_animation in self.animations.keys():
-            v_animation_path = os.path.join("game/graphics/player", l_animation)
+            v_animation_path = os.path.join("game/board_game/graphics/player", l_animation)
             self.animations[l_animation] = support.import_images_from_path(v_animation_path)
         self.animation_index = 0.0
         self.animation_action = "idle"

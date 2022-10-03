@@ -3,8 +3,8 @@
 
 import sys
 # import pygame
-from game import config
-from game import gameplay
+from game.board_game import config
+from game.board_game import gameplay
 from engine import engine
 
 
